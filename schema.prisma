@@ -14,8 +14,6 @@ model User {
 }
 model Post {
     id        String   @default(cuid()) @id
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
     title     String
     author User @relation(fields: [authorUsername], references: [username])
     authorUsername String
