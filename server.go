@@ -1,6 +1,8 @@
 package main
 
 import (
+	"gqlgen-dataloader-prisma/dataloader"
+	"gqlgen-dataloader-prisma/db"
 	"gqlgen-dataloader-prisma/graph"
 	"gqlgen-dataloader-prisma/graph/generated"
 	"log"
@@ -19,10 +21,15 @@ func main() {
 		port = defaultPort
 	}
 
-	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
+	prismaClient := db.NewClient()
+	if err := prismaClient.Prisma.Connect(); err != nil {
+		panic(err)
+	}
+
+	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{Prisma: prismaClient}}))
 
 	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
-	http.Handle("/query", srv)
+	http.Handle("/query", dataloader.Middleware(prismaClient, srv))
 
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
