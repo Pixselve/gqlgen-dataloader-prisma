@@ -10,11 +10,19 @@ import (
 	"gqlgen-dataloader-prisma/graph/model"
 )
 
-func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*model.Todo, error) {
+func (r *mutationResolver) CreateOnePost(ctx context.Context, authorUsername string, title string) (*model.Post, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 
-func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
+func (r *mutationResolver) CreateOneUser(ctx context.Context, username string) (*model.User, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) Users(ctx context.Context) ([]*model.User, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) Posts(ctx context.Context) ([]*model.Post, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 
