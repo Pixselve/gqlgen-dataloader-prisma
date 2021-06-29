@@ -2,15 +2,25 @@
 #
 # https://gqlgen.com/getting-started/
 
-type Post {
-    id:        String
-    title:     String
-    author: User
-    authorUsername: String
+directive @goField(forceResolver: Boolean, name: String) on INPUT_FIELD_DEFINITION
+    | FIELD_DEFINITION
+
+directive @goModel(model: String, models: [String!]) on OBJECT
+    | INPUT_OBJECT
+    | SCALAR
+    | ENUM
+    | INTERFACE
+    | UNION
+
+type Post @goModel(model: "gqlgen-dataloader-prisma/db.PostModel") {
+    id:        String!
+    title:     String!
+    author: User! @goField(forceResolver: true)
+    authorUsername: String!
 }
-type User {
+type User @goModel(model: "gqlgen-dataloader-prisma/db.UserModel") {
     username: String!
-    posts: [Post!]!
+    posts: [Post!]! @goField(forceResolver: true)
 }
 type Query {
     users: [User!]!
